@@ -1,9 +1,9 @@
 {
-  "name": "nestjs-dataloader",
-  "version": "2.0.6",
+  "name": "@zakidoo/nestjs-dataloader",
+  "version": "2.0.9",
   "description": "A NestJS decorator for dataloader",
   "license": "MIT",
-  "repository": "https://github.com/krislefeber/nestjs-dataloader",
+  "repository": "https://github.com/renatokorez/nestjs-dataloader",
   "author": "Kris Lefeber <krislefeber@gmail.com>",
   "main": "dist/index.js",
   "scripts": {
@@ -45,6 +45,7 @@
     "jest": "^25.2.7",
     "reflect-metadata": "^0.1.12",
     "sqlite3": "^4.1.1",
+    "supertest": "^6.1.4",
     "ts-jest": "^25.3.1",
     "typeorm": "^0.2.24",
     "typeorm-factory": "^0.0.14",

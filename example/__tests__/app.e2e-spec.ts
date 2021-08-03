@@ -3,9 +3,10 @@ import { INestApplication } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { createTestClient } from "apollo-server-testing";
 import gql from "graphql-tag";
-import { AppModule } from "./../src/app.module";
+import { AppModule } from '../src/app.module';
 import { Factory } from 'typeorm-factory'
 import { Account } from "../src/account/account.entity";
+const request = require('supertest');
 
 describe("AppModule", () => {
   let app: INestApplication;
@@ -48,4 +49,11 @@ describe("AppModule", () => {
     });
     expect(result.errors).toBeUndefined()
   });
+
+  it(`/GET accounts`, () => {
+    return request(app.getHttpServer())
+        .get('/accounts')
+        .expect(200)
+  });
+
 });

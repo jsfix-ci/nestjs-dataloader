@@ -6,6 +6,7 @@ import { DataLoaderInterceptor } from "../../../index";
 import { Account } from "./account.entity";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AccountLoader } from "./account.loader";
+import { AccountController } from './account.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Account])],
@@ -18,5 +19,6 @@ import { AccountLoader } from "./account.loader";
       useClass: DataLoaderInterceptor,
     },
   ],
+  controllers: [AccountController],
 })
 export class AccountModule {}

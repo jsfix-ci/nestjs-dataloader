@@ -7,10 +7,9 @@ import {
   NestInterceptor,
 } from '@nestjs/common';
 import { APP_INTERCEPTOR, ModuleRef, ContextIdFactory } from '@nestjs/core';
-import { GqlExecutionContext } from '@nestjs/graphql';
-import * as DataLoader from 'dataloader';
+import { GqlContextType, GqlExecutionContext } from '@nestjs/graphql';
+import DataLoader from 'dataloader';
 import { Observable } from 'rxjs';
-import { idText } from 'typescript';
 
 /**
  * This interface will be used to generate the initial data loader.                
@@ -40,8 +39,7 @@ export class DataLoaderInterceptor implements NestInterceptor {
    * @inheritdoc
    */
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const graphqlExecutionContext = GqlExecutionContext.create(context);
-    const ctx = graphqlExecutionContext.getContext();
+    let ctx = getContext(context);
 
     if (ctx && ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
       ctx[NEST_LOADER_CONTEXT_KEY] = {
@@ -65,11 +63,20 @@ export class DataLoaderInterceptor implements NestInterceptor {
   }
 }
 
+function getContext(context: ExecutionContext & { [p: string]: any }) {
+  if (context.getType() === 'http') {
+    return context.switchToHttp().getRequest();
+  } else {
+    return GqlExecutionContext.create(context).getContext();
+  }
+}
+
 /**
  * The decorator to be used within your graphql method.
  */
 export const Loader = createParamDecorator(async (data: any, context: ExecutionContext & { [key: string]: any }) => {
-  const ctx: any = GqlExecutionContext.create(context).getContext();
+  let ctx = getContext(context);
+
   if (ctx[NEST_LOADER_CONTEXT_KEY] === undefined) {
     throw new InternalServerErrorException(`
             You should provide interceptor ${DataLoaderInterceptor.name} globally with ${APP_INTERCEPTOR}
